@@ -4,7 +4,6 @@ Este projeto contém um modelo simples em Python que permite simular o balanço 
 
 ## Requisitos
 
-O código utiliza apenas bibliotecas da biblioteca padrão do Python (>=3.10).
 
 ## Estrutura dos dados
 
@@ -38,6 +37,7 @@ Opções adicionais:
 - `--decimals`: define o número de casas decimais mostradas nas tabelas.
 
 O relatório apresenta, para cada dia, as quantidades produzidas, o uso de cada máquina (comparado à capacidade declarada) e o balanço dos recursos. Na parte final, há um resumo consolidado com totais acumulados e os maiores picos de utilização.
+
 
 ## Estruturação de novas receitas
 
