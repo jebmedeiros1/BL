@@ -4,9 +4,6 @@ Este projeto contém um modelo simples em Python que permite simular o balanço 
 
 ## Requisitos
 
-- Python 3.10 ou superior.
-- O núcleo do simulador (CLI) utiliza apenas bibliotecas da biblioteca padrão.
-- Para usar a interface gráfica é necessário instalar o [Streamlit](https://streamlit.io/) (que já traz as dependências necessárias, como pandas).
 
 ## Estrutura dos dados
 
@@ -41,22 +38,6 @@ Opções adicionais:
 
 O relatório apresenta, para cada dia, as quantidades produzidas, o uso de cada máquina (comparado à capacidade declarada) e o balanço dos recursos. Na parte final, há um resumo consolidado com totais acumulados e os maiores picos de utilização.
 
-## Interface gráfica (Streamlit)
-
-Instale a dependência adicional e execute o aplicativo:
-
-```bash
-pip install streamlit
-streamlit run plant_balancer/streamlit_app.py
-```
-
-Na barra lateral é possível escolher os arquivos de configuração e plano (os caminhos padrão apontam para os exemplos em `data/`), além de filtrar o intervalo de datas. A visualização apresenta séries horárias para:
-
-- Balanço de recursos (consumos positivos e gerações negativas);
-- Produção de produtos;
-- Utilização das capacidades de cada máquina.
-
-Cada aba do dashboard permite selecionar quais itens exibir no gráfico e na tabela. Os valores horários representam a distribuição uniforme das quantidades calculadas por dia, facilitando a comparação entre recursos e equipamentos ao longo do período.
 
 ## Estruturação de novas receitas
 
