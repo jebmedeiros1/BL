@@ -1,0 +1,241 @@
+{
+  "resources": [
+    {"id": "fibra_madeira", "name": "Cavacos de Madeira", "unit": "t/dia"},
+    {"id": "licor_branco", "name": "Licor Branco", "unit": "m3/dia"},
+    {"id": "licor_negro", "name": "Licor Negro", "unit": "m3/dia"},
+    {"id": "pasta_marron", "name": "Pasta Marrom", "unit": "t/dia"},
+    {"id": "pasta_branqueada", "name": "Pasta Branqueada", "unit": "t/dia"},
+    {"id": "celulose_secada", "name": "Celulose Secada", "unit": "t/dia"},
+    {"id": "papel", "name": "Papel", "unit": "t/dia"},
+    {"id": "vapor_alta", "name": "Vapor de Alta Pressão", "unit": "t/dia"},
+    {"id": "vapor_baixa", "name": "Vapor de Baixa Pressão", "unit": "t/dia"},
+    {"id": "energia_eletrica", "name": "Energia Elétrica", "unit": "MWh/dia"},
+    {"id": "quimicos", "name": "Químicos de Processo", "unit": "t/dia"},
+    {"id": "aditivos", "name": "Aditivos", "unit": "t/dia"},
+    {"id": "biomassa", "name": "Biomassa", "unit": "t/dia"}
+  ],
+  "machine_groups": [
+    {"id": "digestores", "name": "Digestores"},
+    {"id": "branqueamento", "name": "Branqueamento (BTCMP)"},
+    {"id": "secagem_celulose", "name": "Máquinas de Secagem de Celulose"},
+    {"id": "maquinas_papel", "name": "Máquinas de Papel"},
+    {"id": "caldeiras_recuperacao", "name": "Caldeiras de Recuperação"},
+    {"id": "caldeiras_forca", "name": "Caldeiras de Força"},
+    {"id": "turbo_geradores", "name": "Turbo Geradores"}
+  ],
+  "machines": [
+    {"id": "dig1", "name": "Digestor 1", "group_id": "digestores", "capacity": {"chip_throughput": 520}},
+    {"id": "dig2", "name": "Digestor 2", "group_id": "digestores", "capacity": {"chip_throughput": 520}},
+    {"id": "dig3", "name": "Digestor 3", "group_id": "digestores", "capacity": {"chip_throughput": 520}},
+    {"id": "dig4", "name": "Digestor 4", "group_id": "digestores", "capacity": {"chip_throughput": 520}},
+    {"id": "btcmp", "name": "Planta BTCMP", "group_id": "branqueamento", "capacity": {"bleaching": 1300}},
+    {"id": "sec1", "name": "Máquina de Celulose 1", "group_id": "secagem_celulose", "capacity": {"pulp_drying": 700}},
+    {"id": "sec2", "name": "Máquina de Celulose 2", "group_id": "secagem_celulose", "capacity": {"pulp_drying": 700}},
+    {"id": "mp1", "name": "Máquina de Papel 1", "group_id": "maquinas_papel", "capacity": {"paper_output": 650}},
+    {"id": "mp2", "name": "Máquina de Papel 2", "group_id": "maquinas_papel", "capacity": {"paper_output": 600}},
+    {"id": "cr1", "name": "Caldeira de Recuperação 1", "group_id": "caldeiras_recuperacao", "capacity": {"steam_generation": 1200}},
+    {"id": "cr2", "name": "Caldeira de Recuperação 2", "group_id": "caldeiras_recuperacao", "capacity": {"steam_generation": 1100}},
+    {"id": "cf1", "name": "Caldeira de Força 1", "group_id": "caldeiras_forca", "capacity": {"steam_generation": 900}},
+    {"id": "cf2", "name": "Caldeira de Força 2", "group_id": "caldeiras_forca", "capacity": {"steam_generation": 900}},
+    {"id": "tg1", "name": "Turbo Gerador 1", "group_id": "turbo_geradores", "capacity": {"steam_to_turbo": 1200}},
+    {"id": "tg2", "name": "Turbo Gerador 2", "group_id": "turbo_geradores", "capacity": {"steam_to_turbo": 1100}},
+    {"id": "tg3", "name": "Turbo Gerador 3", "group_id": "turbo_geradores", "capacity": {"steam_to_turbo": 900}}
+  ],
+  "products": [
+    {
+      "id": "celulose_mercado",
+      "name": "Celulose de Mercado",
+      "unit": "t",
+      "steps": [
+        {
+          "name": "Cozimento",
+          "target": "group",
+          "group_id": "digestores",
+          "allocation": {"dig1": 0.25, "dig2": 0.25, "dig3": 0.25, "dig4": 0.25},
+          "capacity_usage": {"chip_throughput": 1.0},
+          "resource_changes": {
+            "fibra_madeira": 1.05,
+            "licor_branco": 0.22,
+            "vapor_alta": 2.1,
+            "energia_eletrica": 0.08,
+            "licor_negro": -2.1,
+            "pasta_marron": -1.05
+          }
+        },
+        {
+          "name": "Branqueamento",
+          "target": "machine",
+          "machine_id": "btcmp",
+          "capacity_usage": {"bleaching": 1.0},
+          "resource_changes": {
+            "pasta_marron": 1.05,
+            "quimicos": 0.06,
+            "vapor_baixa": 0.55,
+            "energia_eletrica": 0.04,
+            "pasta_branqueada": -1.0
+          }
+        },
+        {
+          "name": "Secagem de Celulose",
+          "target": "order_machine",
+          "required_group": "secagem_celulose",
+          "capacity_usage": {"pulp_drying": 1.0},
+          "resource_changes": {
+            "pasta_branqueada": 1.0,
+            "vapor_baixa": 1.2,
+            "energia_eletrica": 0.12,
+            "celulose_secada": -1.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "papel_revestido",
+      "name": "Papel Revestido",
+      "unit": "t",
+      "steps": [
+        {
+          "name": "Cozimento",
+          "target": "group",
+          "group_id": "digestores",
+          "allocation": {"dig1": 0.25, "dig2": 0.25, "dig3": 0.25, "dig4": 0.25},
+          "capacity_usage": {"chip_throughput": 1.0},
+          "resource_changes": {
+            "fibra_madeira": 1.05,
+            "licor_branco": 0.22,
+            "vapor_alta": 2.1,
+            "energia_eletrica": 0.08,
+            "licor_negro": -2.1,
+            "pasta_marron": -1.05
+          }
+        },
+        {
+          "name": "Branqueamento",
+          "target": "machine",
+          "machine_id": "btcmp",
+          "capacity_usage": {"bleaching": 1.0},
+          "resource_changes": {
+            "pasta_marron": 1.05,
+            "quimicos": 0.08,
+            "vapor_baixa": 0.6,
+            "energia_eletrica": 0.05,
+            "pasta_branqueada": -1.0
+          }
+        },
+        {
+          "name": "Máquina de Papel",
+          "target": "order_machine",
+          "required_group": "maquinas_papel",
+          "capacity_usage": {"paper_output": 1.0},
+          "resource_changes": {
+            "pasta_branqueada": 1.0,
+            "vapor_baixa": 1.4,
+            "energia_eletrica": 0.45,
+            "aditivos": 0.08,
+            "papel": -1.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "papel_nao_revestido",
+      "name": "Papel Não Revestido",
+      "unit": "t",
+      "steps": [
+        {
+          "name": "Cozimento",
+          "target": "group",
+          "group_id": "digestores",
+          "allocation": {"dig1": 0.25, "dig2": 0.25, "dig3": 0.25, "dig4": 0.25},
+          "capacity_usage": {"chip_throughput": 1.0},
+          "resource_changes": {
+            "fibra_madeira": 1.02,
+            "licor_branco": 0.2,
+            "vapor_alta": 2.0,
+            "energia_eletrica": 0.07,
+            "licor_negro": -2.0,
+            "pasta_marron": -1.03
+          }
+        },
+        {
+          "name": "Branqueamento",
+          "target": "machine",
+          "machine_id": "btcmp",
+          "capacity_usage": {"bleaching": 1.0},
+          "resource_changes": {
+            "pasta_marron": 1.03,
+            "quimicos": 0.05,
+            "vapor_baixa": 0.5,
+            "energia_eletrica": 0.04,
+            "pasta_branqueada": -0.98
+          }
+        },
+        {
+          "name": "Máquina de Papel",
+          "target": "order_machine",
+          "required_group": "maquinas_papel",
+          "capacity_usage": {"paper_output": 1.0},
+          "resource_changes": {
+            "pasta_branqueada": 0.98,
+            "vapor_baixa": 1.2,
+            "energia_eletrica": 0.35,
+            "aditivos": 0.05,
+            "papel": -1.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "vapor_recuperacao",
+      "name": "Geração de Vapor - Recuperação",
+      "unit": "t_vapor",
+      "steps": [
+        {
+          "name": "Caldeira de Recuperação",
+          "target": "order_machine",
+          "required_group": "caldeiras_recuperacao",
+          "capacity_usage": {"steam_generation": 1.0},
+          "resource_changes": {
+            "licor_negro": 1.05,
+            "vapor_alta": -1.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "vapor_forca",
+      "name": "Geração de Vapor - Força",
+      "unit": "t_vapor",
+      "steps": [
+        {
+          "name": "Caldeira de Força",
+          "target": "order_machine",
+          "required_group": "caldeiras_forca",
+          "capacity_usage": {"steam_generation": 1.0},
+          "resource_changes": {
+            "biomassa": 0.6,
+            "vapor_alta": -1.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "turbogeracao",
+      "name": "Turbogerador",
+      "unit": "t_vapor",
+      "steps": [
+        {
+          "name": "Geração",
+          "target": "order_machine",
+          "required_group": "turbo_geradores",
+          "capacity_usage": {"steam_to_turbo": 1.0},
+          "resource_changes": {
+            "vapor_alta": 1.0,
+            "vapor_baixa": -0.85,
+            "energia_eletrica": -0.18
+          }
+        }
+      ]
+    }
+  ]
+}
